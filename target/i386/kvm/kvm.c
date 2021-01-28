@@ -4480,7 +4480,7 @@ void kvm_arch_update_guest_debug(CPUState *cpu, struct kvm_guest_debug *dbg)
         dbg->arch.debugreg[7] = 0x0600;
         for (n = 0; n < nb_hw_breakpoint; n++) {
             dbg->arch.debugreg[n] = hw_breakpoint[n].addr;
-            // fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%llx\n", dbg->arch.debugreg[n]);
+            fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%llx\n", dbg->arch.debugreg[n]);
             dbg->arch.debugreg[7] |= (2 << (n * 2)) |
                 (type_code[hw_breakpoint[n].type] << (16 + n*4)) |
                 ((uint32_t)len_code[hw_breakpoint[n].len] << (18 + n*4));
