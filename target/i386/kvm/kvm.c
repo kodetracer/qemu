@@ -4323,76 +4323,71 @@ int kvm_arch_remove_sw_breakpoint(CPUState *cs, struct kvm_sw_breakpoint *bp)
     return 0;
 }
 
-// TODO: Remove this and replace the entire thing with a boolean enabled
-static struct {
-    target_ulong addr;
-    int len;
-    int type;
-} hw_breakpoint[4];
+// static struct {
+//     target_ulong addr;
+//     int len;
+//     int type;
+// } hw_breakpoint[4];
 
 static int nb_hw_breakpoint;
 
-static int find_hw_breakpoint(target_ulong addr, int len, int type)
-{
-    int n;
+// static int find_hw_breakpoint(target_ulong addr, int len, int type)
+// {
+//     int n;
 
-    for (n = 0; n < nb_hw_breakpoint; n++) {
-        if (hw_breakpoint[n].addr == addr && hw_breakpoint[n].type == type &&
-            (hw_breakpoint[n].len == len || len == -1)) {
-            return n;
-        }
-    }
-    return -1;
-}
+//     for (n = 0; n < nb_hw_breakpoint; n++) {
+//         if (hw_breakpoint[n].addr == addr && hw_breakpoint[n].type == type &&
+//             (hw_breakpoint[n].len == len || len == -1)) {
+//             return n;
+//         }
+//     }
+//     return -1;
+// }
 
 int kvm_arch_insert_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
-    switch (type) {
-    case GDB_BREAKPOINT_HW:
-        len = 1;
-        break;
-    case GDB_WATCHPOINT_WRITE:
-    case GDB_WATCHPOINT_ACCESS:
-        switch (len) {
-        case 1:
-            break;
-        case 2:
-        case 4:
-        case 8:
-            if (addr & (len - 1)) {
-                return -EINVAL;
-            }
-            break;
-        default:
-            return -EINVAL;
-        }
-        break;
-    default:
-        return -ENOSYS;
-    }
+    // switch (type) {
+    // case GDB_BREAKPOINT_HW:
+    //     len = 1;
+    //     break;
+    // case GDB_WATCHPOINT_WRITE:
+    // case GDB_WATCHPOINT_ACCESS:
+    //     switch (len) {
+    //     case 1:
+    //         break;
+    //     case 2:
+    //     case 4:
+    //     case 8:
+    //         if (addr & (len - 1)) {
+    //             return -EINVAL;
+    //         }
+    //         break;
+    //     default:
+    //         return -EINVAL;
+    //     }
+    //     break;
+    // default:
+    //     return -ENOSYS;
+    // }
 
-    if (nb_hw_breakpoint == 4) {
-        return -ENOBUFS;
-    }
-    if (find_hw_breakpoint(addr, len, type) >= 0) {
-        return -EEXIST;
-    }
-    hw_breakpoint[nb_hw_breakpoint].addr = addr;
-    hw_breakpoint[nb_hw_breakpoint].len = len;
-    hw_breakpoint[nb_hw_breakpoint].type = type;
+    // if (nb_hw_breakpoint == 4) {
+    //     return -ENOBUFS;
+    // }
+    // if (find_hw_breakpoint(addr, len, type) >= 0) {
+    //     return -EEXIST;
+    // }
+    // hw_breakpoint[nb_hw_breakpoint].addr = addr;
+    // hw_breakpoint[nb_hw_breakpoint].len = len;
+    // hw_breakpoint[nb_hw_breakpoint].type = type;
     nb_hw_breakpoint++;
 
     return 0;
 }
 
-
-
 int kvm_arch_remove_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
-    // TODO: We need to also update the dr registers
-    fprintf(stderr, "[kvm] removing hardware breakpoint at: 0x%lx\n", addr);
     nb_hw_breakpoint--;
     return 0;
 }
@@ -4427,13 +4422,15 @@ static int kvm_handle_debug(X86CPU *cpu,
                     case 0x1:
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
-                        hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        hw_watchpoint.vaddr = env->dr[n];
                         hw_watchpoint.flags = BP_MEM_WRITE;
                         break;
                     case 0x3:
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
-                        hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        hw_watchpoint.vaddr = env->dr[n];
                         hw_watchpoint.flags = BP_MEM_ACCESS;
                         break;
                     }
@@ -4470,8 +4467,6 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
     }
 
-    fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%lx with dr7 0x%lx\n",
-        env->dr[0], env->dr[7]);
     dbg->arch.debugreg[0] = env->dr[0];
     dbg->arch.debugreg[1] = env->dr[1];
     dbg->arch.debugreg[2] = env->dr[2];
