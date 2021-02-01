@@ -4389,6 +4389,7 @@ int kvm_arch_insert_hw_breakpoint(target_ulong addr,
 int kvm_arch_remove_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
+    // TODO: We need to also update the dr registers
     fprintf(stderr, "[kvm] removing hardware breakpoint at: 0x%lx\n", addr);
     nb_hw_breakpoint--;
     return 0;
