@@ -4323,6 +4323,7 @@ int kvm_arch_remove_sw_breakpoint(CPUState *cs, struct kvm_sw_breakpoint *bp)
     return 0;
 }
 
+// TODO: Remove this and replace the entire thing with a boolean enabled
 static struct {
     target_ulong addr;
     int len;
@@ -4388,15 +4389,8 @@ int kvm_arch_insert_hw_breakpoint(target_ulong addr,
 int kvm_arch_remove_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
-    int n;
-
-    n = find_hw_breakpoint(addr, (type == GDB_BREAKPOINT_HW) ? 1 : len, type);
-    if (n < 0) {
-        return -ENOENT;
-    }
+    fprintf(stderr, "[kvm] removing hardware breakpoint at: 0x%lx\n", addr);
     nb_hw_breakpoint--;
-    hw_breakpoint[n] = hw_breakpoint[nb_hw_breakpoint];
-
     return 0;
 }
 
@@ -4460,31 +4454,23 @@ static int kvm_handle_debug(X86CPU *cpu,
     return ret;
 }
 
-void kvm_arch_update_guest_debug(CPUState *cpu, struct kvm_guest_debug *dbg)
+void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
-    const uint8_t type_code[] = {
-        [GDB_BREAKPOINT_HW] = 0x0,
-        [GDB_WATCHPOINT_WRITE] = 0x1,
-        [GDB_WATCHPOINT_ACCESS] = 0x3
-    };
-    const uint8_t len_code[] = {
-        [1] = 0x0, [2] = 0x1, [4] = 0x3, [8] = 0x2
-    };
-    int n;
+    X86CPU *cpu = X86_CPU(cs);
+    CPUX86State *env = &cpu->env;
 
-    if (kvm_sw_breakpoints_active(cpu)) {
+    if (kvm_sw_breakpoints_active(cs)) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
     }
     if (nb_hw_breakpoint > 0) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
-        dbg->arch.debugreg[7] = 0x0600;
-        for (n = 0; n < nb_hw_breakpoint; n++) {
-            dbg->arch.debugreg[n] = hw_breakpoint[n].addr;
-            fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%llx\n", dbg->arch.debugreg[n]);
-            dbg->arch.debugreg[7] |= (2 << (n * 2)) |
-                (type_code[hw_breakpoint[n].type] << (16 + n*4)) |
-                ((uint32_t)len_code[hw_breakpoint[n].len] << (18 + n*4));
-        }
+        fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%lx with dr7 0x%lx\n",
+            env->dr[0], env->dr[7]);
+        dbg->arch.debugreg[0] = env->dr[0];
+        dbg->arch.debugreg[1] = env->dr[1];
+        dbg->arch.debugreg[2] = env->dr[2];
+        dbg->arch.debugreg[3] = env->dr[3];
+        dbg->arch.debugreg[7] = env->dr[7];
     }
 }
 

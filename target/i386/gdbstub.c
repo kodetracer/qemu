@@ -234,7 +234,6 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
             }
             return gdb_get_reg32(mem_buf, env->efer);
 
-
         case IDX_DR_REGS:
             return gdb_get_reg64(mem_buf, env->dr[0]);
         case IDX_DR_REGS + 1:
@@ -461,6 +460,24 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             cpu_load_efer(env, ldl_p(mem_buf));
             return 4;
 
+        case IDX_DR_REGS:
+            env->dr[0] = ldq_p(mem_buf);
+            return 8;
+        case IDX_DR_REGS + 1:
+            env->dr[1] = ldq_p(mem_buf);
+            return 8;
+        case IDX_DR_REGS + 2:
+            env->dr[2] = ldq_p(mem_buf);
+            return 8;
+        case IDX_DR_REGS + 3:
+            env->dr[3] = ldq_p(mem_buf);
+            return 8;
+        case IDX_DR_REGS + 4:
+            env->dr[6] = ldq_p(mem_buf);
+            return 8;
+        case IDX_DR_REGS + 5:
+            env->dr[7] = ldq_p(mem_buf);
+            return 8;
         }
     }
     /* Unrecognised register.  */
