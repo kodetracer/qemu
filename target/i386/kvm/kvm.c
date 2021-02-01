@@ -4386,6 +4386,8 @@ int kvm_arch_insert_hw_breakpoint(target_ulong addr,
     return 0;
 }
 
+
+
 int kvm_arch_remove_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
@@ -4463,16 +4465,18 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
     if (kvm_sw_breakpoints_active(cs)) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
     }
+
     if (nb_hw_breakpoint > 0) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
-        fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%lx with dr7 0x%lx\n",
-            env->dr[0], env->dr[7]);
-        dbg->arch.debugreg[0] = env->dr[0];
-        dbg->arch.debugreg[1] = env->dr[1];
-        dbg->arch.debugreg[2] = env->dr[2];
-        dbg->arch.debugreg[3] = env->dr[3];
-        dbg->arch.debugreg[7] = env->dr[7];
     }
+
+    fprintf(stderr, "[kvm] setting hardware breakpoint at: 0x%lx with dr7 0x%lx\n",
+        env->dr[0], env->dr[7]);
+    dbg->arch.debugreg[0] = env->dr[0];
+    dbg->arch.debugreg[1] = env->dr[1];
+    dbg->arch.debugreg[2] = env->dr[2];
+    dbg->arch.debugreg[3] = env->dr[3];
+    dbg->arch.debugreg[7] = env->dr[7];
 }
 
 static bool host_supports_vmx(void)
