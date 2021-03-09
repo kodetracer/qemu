@@ -359,10 +359,3 @@ index c8d61daf68..1483cad4ee 100644
  }
  
  static bool host_supports_vmx(void)
-diff --git a/ui/keycodemapdb b/ui/keycodemapdb
-index 6119e6e19a..320f92c36a 160000
---- a/ui/keycodemapdb
-+++ b/ui/keycodemapdb
-@@ -1 +1 @@
--Subproject commit 6119e6e19a050df847418de7babe5166779955e4
-+Subproject commit 320f92c36a80bfafc5d57834592a7be5fd79f104
