@@ -53,8 +53,11 @@ static const int gpr_map32[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
  * fpu regs ----------> 8 or 16
  */
 #define IDX_NB_MXCSR    1
+#define IDX_NB_DR       6
+#define IDX_NB_HFLAGS   1
+#define IDX_NB_IDT      2
 /*
- *          total ----> 8+1+1+9+6+16+8+1=50 or 16+1+1+9+6+16+16+1=66
+ *          total ----> 8+1+1+9+6+16+8+1+6+1+2=59 or 16+1+1+9+6+16+16+1+6+1+2=75
  */
 
 #define IDX_IP_REG      CPU_NB_REGS
@@ -64,6 +67,9 @@ static const int gpr_map32[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 #define IDX_FP_REGS     (IDX_CTL_REGS + IDX_NB_CTL)
 #define IDX_XMM_REGS    (IDX_FP_REGS + IDX_NB_FP)
 #define IDX_MXCSR_REG   (IDX_XMM_REGS + CPU_NB_REGS)
+#define IDX_DR_REGS     (IDX_MXCSR_REG + IDX_NB_MXCSR)
+#define IDX_HFLAGS_REG  (IDX_DR_REGS + IDX_NB_DR)
+#define IDX_IDT_REGS    (IDX_HFLAGS_REG + IDX_NB_HFLAGS)
 
 #define IDX_CTL_CR0_REG     (IDX_CTL_REGS + 0)
 #define IDX_CTL_CR2_REG     (IDX_CTL_REGS + 1)
@@ -213,6 +219,27 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
 
         case IDX_CTL_EFER_REG:
             return gdb_read_reg_cs64(env->hflags, mem_buf, env->efer);
+
+        case IDX_DR_REGS:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[0]);
+        case IDX_DR_REGS + 1:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[1]);
+        case IDX_DR_REGS + 2:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[2]);
+        case IDX_DR_REGS + 3:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[3]);
+        case IDX_DR_REGS + 4:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[6]);
+        case IDX_DR_REGS + 5:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->dr[7]);
+
+        case IDX_HFLAGS_REG:
+            return gdb_get_reg32(mem_buf, env->hflags);
+
+        case IDX_IDT_REGS:
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->idt.base);
+        case IDX_IDT_REGS + 1:
+            return gdb_get_reg32(mem_buf, env->idt.limit);
         }
     }
     return 0;
@@ -392,6 +419,39 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             cpu_load_efer(env, tmp);
 #endif
             return len;
+
+        case IDX_DR_REGS:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[0]);
+        case IDX_DR_REGS + 1:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[1]);
+        case IDX_DR_REGS + 2:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[2]);
+        case IDX_DR_REGS + 3:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[3]);
+        case IDX_DR_REGS + 4:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[6]);
+        case IDX_DR_REGS + 5:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[7]);
+
+        case IDX_HFLAGS_REG:
+            // Avoid flipping hflags between 32-bit and 64-bit
+            if (env->hflags & HF_CS64_MASK) {
+                env->hflags = ldl_p(mem_buf);
+                // Enforce 64-bit by masking in the 64-bit mask
+                env->hflags |= HF_CS64_MASK;
+            } else {
+                env->hflags = ldl_p(mem_buf);
+                // Enforce 32-bit by masking out the 64-bit mask
+                env->hflags &= ~HF_CS64_MASK;
+            }
+            return 4;
+
+        case IDX_IDT_REGS:
+            return gdb_write_reg_cs64(env->hflags, mem_buf, &env->idt.base);
+
+        case IDX_IDT_REGS + 1:
+            env->idt.limit = ldl_p(mem_buf);
+            return 4;
         }
     }
     /* Unrecognised register.  */
