@@ -3191,6 +3191,8 @@ int kvm_update_guest_debug(CPUState *cpu, unsigned long reinject_trap)
 
     data.dbg.control = reinject_trap;
 
+    // TODO: Should we avoid setting KVM_GUESTDBG_SINGLESTEP here?
+    //       Or maybe make sure it's unset when single stepping is done?
     if (cpu->singlestep_enabled) {
         data.dbg.control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_SINGLESTEP;
     }

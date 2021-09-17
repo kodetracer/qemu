@@ -4524,88 +4524,88 @@ static int kvm_handle_tpr_access(X86CPU *cpu)
 
 int kvm_arch_insert_sw_breakpoint(CPUState *cs, struct kvm_sw_breakpoint *bp)
 {
-    static const uint8_t int3 = 0xcc;
+    // static const uint8_t int3 = 0xcc;
 
-    if (cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&bp->saved_insn, 1, 0) ||
-        cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&int3, 1, 1)) {
-        return -EINVAL;
-    }
+    // if (cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&bp->saved_insn, 1, 0) ||
+    //     cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&int3, 1, 1)) {
+    //     return -EINVAL;
+    // }
     return 0;
 }
 
 int kvm_arch_remove_sw_breakpoint(CPUState *cs, struct kvm_sw_breakpoint *bp)
 {
-    uint8_t int3;
+    // uint8_t int3;
 
-    if (cpu_memory_rw_debug(cs, bp->pc, &int3, 1, 0)) {
-        return -EINVAL;
-    }
-    if (int3 != 0xcc) {
-        return 0;
-    }
-    if (cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&bp->saved_insn, 1, 1)) {
-        return -EINVAL;
-    }
+    // if (cpu_memory_rw_debug(cs, bp->pc, &int3, 1, 0)) {
+    //     return -EINVAL;
+    // }
+    // if (int3 != 0xcc) {
+    //     return 0;
+    // }
+    // if (cpu_memory_rw_debug(cs, bp->pc, (uint8_t *)&bp->saved_insn, 1, 1)) {
+    //     return -EINVAL;
+    // }
     return 0;
 }
 
-static struct {
-    target_ulong addr;
-    int len;
-    int type;
-} hw_breakpoint[4];
+// static struct {
+//     target_ulong addr;
+//     int len;
+//     int type;
+// } hw_breakpoint[4];
 
 static int nb_hw_breakpoint;
 
-static int find_hw_breakpoint(target_ulong addr, int len, int type)
-{
-    int n;
+// static int find_hw_breakpoint(target_ulong addr, int len, int type)
+// {
+//     int n;
 
-    for (n = 0; n < nb_hw_breakpoint; n++) {
-        if (hw_breakpoint[n].addr == addr && hw_breakpoint[n].type == type &&
-            (hw_breakpoint[n].len == len || len == -1)) {
-            return n;
-        }
-    }
-    return -1;
-}
+//     for (n = 0; n < nb_hw_breakpoint; n++) {
+//         if (hw_breakpoint[n].addr == addr && hw_breakpoint[n].type == type &&
+//             (hw_breakpoint[n].len == len || len == -1)) {
+//             return n;
+//         }
+//     }
+//     return -1;
+// }
 
 int kvm_arch_insert_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
-    switch (type) {
-    case GDB_BREAKPOINT_HW:
-        len = 1;
-        break;
-    case GDB_WATCHPOINT_WRITE:
-    case GDB_WATCHPOINT_ACCESS:
-        switch (len) {
-        case 1:
-            break;
-        case 2:
-        case 4:
-        case 8:
-            if (addr & (len - 1)) {
-                return -EINVAL;
-            }
-            break;
-        default:
-            return -EINVAL;
-        }
-        break;
-    default:
-        return -ENOSYS;
-    }
+    // switch (type) {
+    // case GDB_BREAKPOINT_HW:
+    //     len = 1;
+    //     break;
+    // case GDB_WATCHPOINT_WRITE:
+    // case GDB_WATCHPOINT_ACCESS:
+    //     switch (len) {
+    //     case 1:
+    //         break;
+    //     case 2:
+    //     case 4:
+    //     case 8:
+    //         if (addr & (len - 1)) {
+    //             return -EINVAL;
+    //         }
+    //         break;
+    //     default:
+    //         return -EINVAL;
+    //     }
+    //     break;
+    // default:
+    //     return -ENOSYS;
+    // }
 
-    if (nb_hw_breakpoint == 4) {
-        return -ENOBUFS;
-    }
-    if (find_hw_breakpoint(addr, len, type) >= 0) {
-        return -EEXIST;
-    }
-    hw_breakpoint[nb_hw_breakpoint].addr = addr;
-    hw_breakpoint[nb_hw_breakpoint].len = len;
-    hw_breakpoint[nb_hw_breakpoint].type = type;
+    // if (nb_hw_breakpoint == 4) {
+    //     return -ENOBUFS;
+    // }
+    // if (find_hw_breakpoint(addr, len, type) >= 0) {
+    //     return -EEXIST;
+    // }
+    // hw_breakpoint[nb_hw_breakpoint].addr = addr;
+    // hw_breakpoint[nb_hw_breakpoint].len = len;
+    // hw_breakpoint[nb_hw_breakpoint].type = type;
     nb_hw_breakpoint++;
 
     return 0;
@@ -4614,15 +4614,7 @@ int kvm_arch_insert_hw_breakpoint(target_ulong addr,
 int kvm_arch_remove_hw_breakpoint(target_ulong addr,
                                   target_ulong len, int type)
 {
-    int n;
-
-    n = find_hw_breakpoint(addr, (type == GDB_BREAKPOINT_HW) ? 1 : len, type);
-    if (n < 0) {
-        return -ENOENT;
-    }
     nb_hw_breakpoint--;
-    hw_breakpoint[n] = hw_breakpoint[nb_hw_breakpoint];
-
     return 0;
 }
 
@@ -4656,13 +4648,15 @@ static int kvm_handle_debug(X86CPU *cpu,
                     case 0x1:
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
-                        hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        hw_watchpoint.vaddr = env->dr[n];
                         hw_watchpoint.flags = BP_MEM_WRITE;
                         break;
                     case 0x3:
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
-                        hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
+                        hw_watchpoint.vaddr = env->dr[n];
                         hw_watchpoint.flags = BP_MEM_ACCESS;
                         break;
                     }
@@ -4686,31 +4680,24 @@ static int kvm_handle_debug(X86CPU *cpu,
     return ret;
 }
 
-void kvm_arch_update_guest_debug(CPUState *cpu, struct kvm_guest_debug *dbg)
+void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
-    const uint8_t type_code[] = {
-        [GDB_BREAKPOINT_HW] = 0x0,
-        [GDB_WATCHPOINT_WRITE] = 0x1,
-        [GDB_WATCHPOINT_ACCESS] = 0x3
-    };
-    const uint8_t len_code[] = {
-        [1] = 0x0, [2] = 0x1, [4] = 0x3, [8] = 0x2
-    };
-    int n;
+    X86CPU *cpu = X86_CPU(cs);
+    CPUX86State *env = &cpu->env;
 
-    if (kvm_sw_breakpoints_active(cpu)) {
+    if (kvm_sw_breakpoints_active(cs)) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
     }
+
     if (nb_hw_breakpoint > 0) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
-        dbg->arch.debugreg[7] = 0x0600;
-        for (n = 0; n < nb_hw_breakpoint; n++) {
-            dbg->arch.debugreg[n] = hw_breakpoint[n].addr;
-            dbg->arch.debugreg[7] |= (2 << (n * 2)) |
-                (type_code[hw_breakpoint[n].type] << (16 + n*4)) |
-                ((uint32_t)len_code[hw_breakpoint[n].len] << (18 + n*4));
-        }
     }
+
+    dbg->arch.debugreg[0] = env->dr[0];
+    dbg->arch.debugreg[1] = env->dr[1];
+    dbg->arch.debugreg[2] = env->dr[2];
+    dbg->arch.debugreg[3] = env->dr[3];
+    dbg->arch.debugreg[7] = env->dr[7];
 }
 
 static bool has_sgx_provisioning;
