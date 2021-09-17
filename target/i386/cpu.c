@@ -7995,6 +7995,7 @@ static void x86_cpu_common_class_init(ObjectClass *oc, void *data)
     cc->gdb_core_xml_file = "i386-64bit.xml";
 #else
     cc->gdb_core_xml_file = "i386-32bit.xml";
+    cc->gdb_num_core_regs = 66 + 9;
 #endif
     cc->disas_set_info = x86_disas_set_info;
 
