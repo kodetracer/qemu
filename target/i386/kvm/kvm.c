@@ -71,7 +71,7 @@
 
 #include CONFIG_DEVICES
 
-#define DEBUG_KVM
+// #define DEBUG_KVM
 
 #ifdef DEBUG_KVM
 #define DPRINTF(fmt, ...) \
@@ -3227,7 +3227,7 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
     has_xcrs = kvm_check_extension(s, KVM_CAP_XCRS);
     has_sregs2 = kvm_check_extension(s, KVM_CAP_SREGS2) > 0;
 
-    DPRINTF("kvm_arch_init: has_sregs2: %d\n", has_sregs2);
+    eprintf("kvm_arch_init: has_sregs2: %d\n", has_sregs2);
 
     hv_vpindex_settable = kvm_check_extension(s, KVM_CAP_HYPERV_VP_INDEX);
 
@@ -5254,7 +5254,7 @@ int kvm_arch_put_registers(CPUState *cpu, int level, Error **errp)
     X86CPU *x86_cpu = X86_CPU(cpu);
     int ret;
 
-    DPRINTF("kvm_arch_put_registers\n");
+    eprintf("kvm_arch_put_registers\n");
 
     assert(cpu_is_stopped(cpu) || qemu_cpu_is_self(cpu));
 
@@ -5356,7 +5356,7 @@ int kvm_arch_get_registers(CPUState *cs, Error **errp)
     X86CPU *cpu = X86_CPU(cs);
     int ret;
 
-    DPRINTF("kvm_arch_get_registers\n");
+    eprintf("kvm_arch_get_registers\n");
 
     assert(cpu_is_stopped(cs) || qemu_cpu_is_self(cs));
 
@@ -5710,7 +5710,7 @@ static int nb_hw_breakpoint;
 
 int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    DPRINTF("kvm_arch_insert_hw_breakpoint\n");
+    eprintf("kvm_arch_insert_hw_breakpoint\n");
     // switch (type) {
     // case GDB_BREAKPOINT_HW:
     //     len = 1;
@@ -5751,14 +5751,14 @@ int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 
 int kvm_arch_remove_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    DPRINTF("kvm_arch_remove_hw_breakpoint\n");
+    eprintf("kvm_arch_remove_hw_breakpoint\n");
     nb_hw_breakpoint--;
     return 0;
 }
 
 void kvm_arch_remove_all_hw_breakpoints(void)
 {
-    DPRINTF("kvm_arch_remove_all_hw_breakpoints\n");
+    eprintf("kvm_arch_remove_all_hw_breakpoints\n");
     nb_hw_breakpoint = 0;
 }
 
@@ -5772,7 +5772,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    DPRINTF("kvm_handle_debug\n");
+    eprintf("kvm_handle_debug\n");
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
