@@ -72,6 +72,7 @@
 #include CONFIG_DEVICES
 
 // #define DEBUG_KVM
+#define eprintf(...) fprintf(stderr, __VA_ARGS__)
 
 #ifdef DEBUG_KVM
 #define DPRINTF(fmt, ...) \
