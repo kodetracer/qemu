@@ -3539,6 +3539,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
     eprintf("kvm_put_sregs2\n");
 
     if ((env->eflags & VM_MASK)) {
+        eprintf("Virtual 8086 mode\n");
         set_v8086_seg(&sregs.cs, &env->segs[R_CS]);
         set_v8086_seg(&sregs.ds, &env->segs[R_DS]);
         set_v8086_seg(&sregs.es, &env->segs[R_ES]);
@@ -3546,6 +3547,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
         set_v8086_seg(&sregs.gs, &env->segs[R_GS]);
         set_v8086_seg(&sregs.ss, &env->segs[R_SS]);
     } else {
+        eprintf("protected mode mode\n");
         set_seg(&sregs.cs, &env->segs[R_CS]);
         set_seg(&sregs.ds, &env->segs[R_DS]);
         set_seg(&sregs.es, &env->segs[R_ES]);
