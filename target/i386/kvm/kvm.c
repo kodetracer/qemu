@@ -3525,6 +3525,8 @@ static int kvm_put_sregs2(X86CPU *cpu)
 
     sregs.flags = 0;
 
+    eprintf("kvm_put_sregs2\n");
+
     if ((env->eflags & VM_MASK)) {
         set_v8086_seg(&sregs.cs, &env->segs[R_CS]);
         set_v8086_seg(&sregs.ds, &env->segs[R_DS]);
@@ -3568,6 +3570,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
         sregs.flags |= KVM_SREGS2_FLAGS_PDPTRS_VALID;
     }
 
+    eprintf("kvm_vcpu_ioctl...\n");
     return kvm_vcpu_ioctl(CPU(cpu), KVM_SET_SREGS2, &sregs);
 }
 
