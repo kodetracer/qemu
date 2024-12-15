@@ -3228,8 +3228,6 @@ int kvm_arch_init(MachineState *ms, KVMState *s)
     has_xcrs = kvm_check_extension(s, KVM_CAP_XCRS);
     has_sregs2 = kvm_check_extension(s, KVM_CAP_SREGS2) > 0;
 
-    eprintf("kvm_arch_init: has_sregs2: %d\n", has_sregs2);
-
     hv_vpindex_settable = kvm_check_extension(s, KVM_CAP_HYPERV_VP_INDEX);
 
     ret = kvm_vm_enable_exception_payload(s);
@@ -3536,10 +3534,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
 
     sregs.flags = 0;
 
-    eprintf("kvm_put_sregs2\n");
-
     if ((env->eflags & VM_MASK)) {
-        eprintf("Virtual 8086 mode\n");
         set_v8086_seg(&sregs.cs, &env->segs[R_CS]);
         set_v8086_seg(&sregs.ds, &env->segs[R_DS]);
         set_v8086_seg(&sregs.es, &env->segs[R_ES]);
@@ -3547,7 +3542,6 @@ static int kvm_put_sregs2(X86CPU *cpu)
         set_v8086_seg(&sregs.gs, &env->segs[R_GS]);
         set_v8086_seg(&sregs.ss, &env->segs[R_SS]);
     } else {
-        eprintf("protected mode mode\n");
         set_seg(&sregs.cs, &env->segs[R_CS]);
         set_seg(&sregs.ds, &env->segs[R_DS]);
         set_seg(&sregs.es, &env->segs[R_ES]);
@@ -3583,7 +3577,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
         sregs.flags |= KVM_SREGS2_FLAGS_PDPTRS_VALID;
     }
 
-    eprintf("kvm_vcpu_ioctl...\n");
+    eprintf("kvm_put_sregs2 calling kvm_vcpu_ioctl...\n");
     return kvm_vcpu_ioctl(CPU(cpu), KVM_SET_SREGS2, &sregs);
 }
 
@@ -5362,8 +5356,6 @@ int kvm_arch_get_registers(CPUState *cs, Error **errp)
     X86CPU *cpu = X86_CPU(cs);
     int ret;
 
-    eprintf("kvm_arch_get_registers\n");
-
     assert(cpu_is_stopped(cs) || qemu_cpu_is_self(cs));
 
     ret = kvm_get_vcpu_events(cpu);
@@ -5716,7 +5708,7 @@ static int nb_hw_breakpoint;
 
 int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    eprintf("kvm_arch_insert_hw_breakpoint\n");
+    // eprintf("kvm_arch_insert_hw_breakpoint\n");
     // switch (type) {
     // case GDB_BREAKPOINT_HW:
     //     len = 1;
@@ -5757,14 +5749,14 @@ int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 
 int kvm_arch_remove_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    eprintf("kvm_arch_remove_hw_breakpoint\n");
+    // eprintf("kvm_arch_remove_hw_breakpoint\n");
     nb_hw_breakpoint--;
     return 0;
 }
 
 void kvm_arch_remove_all_hw_breakpoints(void)
 {
-    eprintf("kvm_arch_remove_all_hw_breakpoints\n");
+    // eprintf("kvm_arch_remove_all_hw_breakpoints\n");
     nb_hw_breakpoint = 0;
 }
 
@@ -5778,7 +5770,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    eprintf("kvm_handle_debug\n");
+    // eprintf("kvm_handle_debug\n");
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
