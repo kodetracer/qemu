@@ -709,6 +709,8 @@ int gdb_breakpoint_insert(CPUState *cs, int type, vaddr addr, vaddr len)
     CPUState *cpu;
     int err = 0;
 
+    printf("[gdb user] gdb_breakpoint_insert (for all CPUs)\n");
+
     switch (type) {
     case GDB_BREAKPOINT_SW:
     case GDB_BREAKPOINT_HW:

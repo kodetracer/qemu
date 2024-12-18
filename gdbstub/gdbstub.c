@@ -1301,6 +1301,8 @@ static void handle_write_all_regs(GArray *params, void *user_ctx)
     uint8_t *registers;
     int reg_size;
 
+    printf("[gdb] handle_write_all_regs\n");
+
     if (!params->len) {
         return;
     }

@@ -641,6 +641,9 @@ bool gdb_supports_guest_debug(void)
 int gdb_breakpoint_insert(CPUState *cs, int type, vaddr addr, vaddr len)
 {
     const AccelOpsClass *ops = cpus_get_accel();
+
+    printf("[gdb system] gdb_breakpoint_insert (probably for selected c CPU, but check ops->insert_breakpoint)\n");
+
     if (ops->insert_breakpoint) {
         return ops->insert_breakpoint(cs, type, addr, len);
     }
