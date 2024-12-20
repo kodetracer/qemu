@@ -300,7 +300,6 @@ static int gdb_write_reg(CPUX86State *env, uint8_t *mem_buf, target_ulong *val)
     }
 }
 
-// This is called by gdb for core regs, and also by set_reg
 int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 {
     X86CPU *cpu = X86_CPU(cs);
