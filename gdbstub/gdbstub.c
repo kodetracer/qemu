@@ -542,12 +542,10 @@ static int gdb_write_register(CPUState *cpu, uint8_t *mem_buf, int reg)
     GDBRegisterState *r;
 
     if (reg < cc->gdb_num_core_regs) {
-        printf("[gdb] writing core reg: %d\n", reg);
         return cc->gdb_write_register(cpu, mem_buf, reg);
     }
 
     for (guint i = 0; i < cpu->gdb_regs->len; i++) {
-        printf("[gdb] writing gdb reg: %d\n", reg);
         r =  &g_array_index(cpu->gdb_regs, GDBRegisterState, i);
         if (r->base_reg <= reg && reg < r->base_reg + r->feature->num_regs) {
             return r->set_reg(cpu, mem_buf, reg - r->base_reg);
