@@ -644,8 +644,9 @@ int gdb_breakpoint_insert(CPUState *cs, int type, vaddr addr, vaddr len)
 {
     const AccelOpsClass *ops = cpus_get_accel();
 
-    printf("[gdb system] gdb_breakpoint_insert (probably for selected c CPU, but check ops->insert_breakpoint)\n");
-
+    // for all CPUs in case of hardware breakpoints
+    // uses cpu->kvm_state->kvm_sw_breakpoints for software breakpoints,
+    // where cpu is from gdbserver_state.c_cpu
     if (ops->insert_breakpoint) {
         return ops->insert_breakpoint(cs, type, addr, len);
     }
