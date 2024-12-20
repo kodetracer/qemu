@@ -3513,6 +3513,8 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     struct kvm_sw_breakpoint *bp;
     int err;
 
+    printf("[gdb] kvm_insert_breakpoint: %d\n", type);
+
     if (type == GDB_BREAKPOINT_SW) {
         bp = kvm_find_sw_breakpoint(cpu, addr);
         if (bp) {
