@@ -550,11 +550,8 @@ void gdb_handle_query_attached(GArray *params, void *ctx)
 void gdb_continue(void)
 {
     if (!runstate_needs_reset()) {
-        printf("[gdb] system gdb_continue, tracing...\n");
         trace_gdbstub_op_continue();
         vm_start();
-    } else {
-        printf("[gdb] system gdb_continue, noop\n");
     }
 }
 
