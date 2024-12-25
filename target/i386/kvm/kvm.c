@@ -5764,21 +5764,26 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    eprintf("kvm_handle_debug: %d on cpu: %d\n", arch_info->exception, cs->cpu_index);
+    eprintf("[kvm] kvm_handle_debug: %d on cpu: %d\n", arch_info->exception, cs->cpu_index);
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
+            printf("[kvm] dr6 & DR6_BS\n");
             if (cs->singlestep_enabled) {
+                printf("[kvm] singlestep_enabled\n");
                 ret = EXCP_DEBUG;
             }
         } else {
+            printf("[kvm] cycle drx\n");
             for (n = 0; n < 4; n++) {
                 if (arch_info->dr6 & (1 << n)) {
                     switch ((arch_info->dr7 >> (16 + n*4)) & 0x3) {
                     case 0x0:
+                        printf("[kvm] case 0\n");
                         ret = EXCP_DEBUG;
                         break;
                     case 0x1:
+                        printf("[kvm] case 1\n");
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
                         // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
@@ -5786,6 +5791,7 @@ static int kvm_handle_debug(X86CPU *cpu,
                         hw_watchpoint.flags = BP_MEM_WRITE;
                         break;
                     case 0x3:
+                        printf("[kvm] case 3\n");
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
                         // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
@@ -5800,6 +5806,7 @@ static int kvm_handle_debug(X86CPU *cpu,
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
+        printf("[kvm] syncing state and queueing exception to guest\n");
         cpu_synchronize_state(cs);
         assert(env->exception_nr == -1);
 
@@ -6064,7 +6071,6 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
         break;
     case KVM_EXIT_DEBUG:
         DPRINTF("kvm_exit_debug\n");
-        eprintf("kvm_exit_debug\n");
         bql_lock();
         ret = kvm_handle_debug(cpu, &run->debug.arch);
         bql_unlock();
