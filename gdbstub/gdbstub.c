@@ -2295,6 +2295,7 @@ void gdb_set_stop_cpu(CPUState *cpu)
         return;
     }
 
+    printf("[gdb] setting c_cpu and g_cpu to stop cpu: %d\n", cpu->cpu_index);
     gdbserver_state.c_cpu = cpu;
     gdbserver_state.g_cpu = cpu;
 }

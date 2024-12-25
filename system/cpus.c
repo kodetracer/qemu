@@ -344,6 +344,7 @@ void cpu_handle_guest_debug(CPUState *cpu)
             cpu_single_step(cpu, 0);
         }
     } else {
+        printf("[kvm] setting gdb stop cpu\n");
         gdb_set_stop_cpu(cpu);
         qemu_system_debug_request();
         cpu->stopped = true;
