@@ -6061,7 +6061,6 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
         DPRINTF("kvm_exit_debug\n");
         bql_lock();
         ret = kvm_handle_debug(cpu, &run->debug.arch);
-        eprintf("[kvm] unlocking\n");
         bql_unlock();
         break;
     case KVM_EXIT_HYPERV:
@@ -6114,7 +6113,7 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
         break;
     }
 
-    eprintf("[kvm] kvm_arch_handle_exit returning: %d\n", ret);
+    // eprintf("[kvm] kvm_arch_handle_exit returning: %d\n", ret);
     return ret;
 }
 
