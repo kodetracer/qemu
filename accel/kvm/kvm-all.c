@@ -3255,7 +3255,7 @@ int kvm_cpu_exec(CPUState *cpu)
                 ret = 0;
                 break;
             default:
-                printf("[kvm] handling exit (KVM_EXIT_SYSTEM_EVENT)\n");
+                // printf("[kvm] handling exit (KVM_EXIT_SYSTEM_EVENT)\n");
                 ret = kvm_arch_handle_exit(cpu, run);
                 break;
             }
@@ -3274,13 +3274,13 @@ int kvm_cpu_exec(CPUState *cpu)
                                      run->memory_fault.flags & KVM_MEMORY_EXIT_FLAG_PRIVATE);
             break;
         default:
-            printf("[kvm] handling exit (default)\n");
+            // printf("[kvm] handling exit (default)\n");
             ret = kvm_arch_handle_exit(cpu, run);
             break;
         }
     } while (ret == 0);
 
-    printf("[kvm] cpu_exec_end: %d\n", ret);
+    // printf("[kvm] cpu_exec_end: %d\n", ret);
     cpu_exec_end(cpu);
     bql_lock();
 
