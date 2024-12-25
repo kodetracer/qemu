@@ -307,8 +307,6 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     target_ulong tmp;
     int len;
 
-    // printf("[gdb] x86_cpu_gdb_write_register: %d\n", n);
-
     /* N.B. GDB can't deal with changes in registers or sizes in the middle
        of a session. So if we're in 32-bit mode on a 64-bit cpu, still act
        as if we're on a 64-bit cpu. */
