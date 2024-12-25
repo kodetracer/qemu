@@ -3085,8 +3085,6 @@ int kvm_cpu_exec(CPUState *cpu)
     struct kvm_run *run = cpu->kvm_run;
     int ret, run_ret;
 
-    printf("[kvm] kvm_cpu_exec\n");
-
     trace_kvm_cpu_exec();
 
     if (kvm_arch_process_async_events(cpu)) {
