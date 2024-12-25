@@ -5764,7 +5764,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    eprintf("kvm_handle_debug: %d\n", arch_info->exception);
+    eprintf("kvm_handle_debug: %d on cpu: %d\n", arch_info->exception, cs->cpu_index);
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
