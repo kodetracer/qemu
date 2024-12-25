@@ -66,6 +66,8 @@ static void kvm_start_vcpu_thread(CPUState *cpu)
 {
     char thread_name[VCPU_THREAD_NAME_SIZE];
 
+    printf("[kvm] start vcpu thread for cpu: %d\n", cpu->cpu_index);
+
     snprintf(thread_name, VCPU_THREAD_NAME_SIZE, "CPU %d/KVM",
              cpu->cpu_index);
     qemu_thread_create(cpu->thread, thread_name, kvm_vcpu_thread_fn,
