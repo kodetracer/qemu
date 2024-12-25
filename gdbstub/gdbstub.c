@@ -1061,7 +1061,10 @@ static void handle_thread_alive(GArray *params, void *user_ctx)
 static void handle_continue(GArray *params, void *user_ctx)
 {
     if (params->len) {
+        printf("[gdb] handle continue setting cpu_pc\n");
         gdb_set_cpu_pc(gdb_get_cmd_param(params, 0)->val_ull);
+    } else {
+        printf("[gdb] handle continue without setting cpu_pc\n");
     }
 
     gdbserver_state.signal = 0;
