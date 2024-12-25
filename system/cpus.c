@@ -491,8 +491,10 @@ void qemu_cpu_kick(CPUState *cpu)
 {
     qemu_cond_broadcast(cpu->halt_cond);
     if (cpus_accel->kick_vcpu_thread) {
+        printf("[cpu] kick accel\n");
         cpus_accel->kick_vcpu_thread(cpu);
     } else { /* default */
+        printf("[cpu] cpus_kick_thread\n");
         cpus_kick_thread(cpu);
     }
 }
