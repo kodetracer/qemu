@@ -5770,7 +5770,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    // eprintf("kvm_handle_debug\n");
+    eprintf("kvm_handle_debug: %d\n", arch_info->exception);
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
@@ -6029,6 +6029,8 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
     bool ctx_invalid;
     KVMState *state;
 
+    eprintf("kvm_arch_handle_exit\n"):
+
     switch (run->exit_reason) {
     case KVM_EXIT_HLT:
         DPRINTF("handle_hlt\n");
@@ -6068,6 +6070,7 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
         break;
     case KVM_EXIT_DEBUG:
         DPRINTF("kvm_exit_debug\n");
+        eprintf("kvm_exit_debug\n");
         bql_lock();
         ret = kvm_handle_debug(cpu, &run->debug.arch);
         bql_unlock();
