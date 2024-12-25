@@ -6011,7 +6011,7 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
     bool ctx_invalid;
     KVMState *state;
 
-    eprintf("kvm_arch_handle_exit\n"):
+    eprintf("kvm_arch_handle_exit\n");
 
     switch (run->exit_reason) {
     case KVM_EXIT_HLT:
