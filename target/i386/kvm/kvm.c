@@ -3577,7 +3577,6 @@ static int kvm_put_sregs2(X86CPU *cpu)
         sregs.flags |= KVM_SREGS2_FLAGS_PDPTRS_VALID;
     }
 
-    eprintf("kvm_put_sregs2 calling kvm_vcpu_ioctl...\n");
     return kvm_vcpu_ioctl(CPU(cpu), KVM_SET_SREGS2, &sregs);
 }
 
@@ -5254,8 +5253,6 @@ int kvm_arch_put_registers(CPUState *cpu, int level, Error **errp)
     X86CPU *x86_cpu = X86_CPU(cpu);
     int ret;
 
-    eprintf("kvm_arch_put_registers\n");
-
     assert(cpu_is_stopped(cpu) || qemu_cpu_is_self(cpu));
 
     /*
@@ -5708,7 +5705,6 @@ static int nb_hw_breakpoint;
 
 int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    // eprintf("kvm_arch_insert_hw_breakpoint\n");
     // switch (type) {
     // case GDB_BREAKPOINT_HW:
     //     len = 1;
@@ -5749,14 +5745,12 @@ int kvm_arch_insert_hw_breakpoint(vaddr addr, vaddr len, int type)
 
 int kvm_arch_remove_hw_breakpoint(vaddr addr, vaddr len, int type)
 {
-    // eprintf("kvm_arch_remove_hw_breakpoint\n");
     nb_hw_breakpoint--;
     return 0;
 }
 
 void kvm_arch_remove_all_hw_breakpoints(void)
 {
-    // eprintf("kvm_arch_remove_all_hw_breakpoints\n");
     nb_hw_breakpoint = 0;
 }
 
