@@ -5137,6 +5137,7 @@ static int kvm_put_debugregs(X86CPU *cpu)
     dbgregs.dr7 = env->dr[7];
     dbgregs.flags = 0;
 
+    printf("[kvm] setting debug registers (KVM_SET_DEBUGREGS)\n");
     return kvm_vcpu_ioctl(CPU(cpu), KVM_SET_DEBUGREGS, &dbgregs);
 }
 
