@@ -5133,7 +5133,7 @@ static int kvm_put_debugregs(X86CPU *cpu)
     memset(&dbgregs, 0, sizeof(dbgregs));
     for (i = 0; i < 4; i++) {
         if (env->dr[i] != 0) {
-            printf("[kvm] setting debug register DR[%d] (KVM_SET_DEBUGREGS) on cpu: %d to: 0x%I64x\n",i, cs->cpu_index, env->dr[i]);
+            printf("[kvm] setting debug register DR[%d] (KVM_SET_DEBUGREGS) on cpu: %d to: 0x%lx\n",i, cs->cpu_index, env->dr[i]);
         }
         dbgregs.db[i] = env->dr[i];
     }
