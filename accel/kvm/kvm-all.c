@@ -3100,6 +3100,7 @@ int kvm_cpu_exec(CPUState *cpu)
 
         if (cpu->vcpu_dirty) {
             Error *err = NULL;
+            printf("[kvm] putting runtime state (dirty) on cpu: %d\n", cpu->cpu_index);
             ret = kvm_arch_put_registers(cpu, KVM_PUT_RUNTIME_STATE, &err);
             if (ret) {
                 if (err) {
