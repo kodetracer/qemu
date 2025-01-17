@@ -1060,11 +1060,9 @@ static void handle_thread_alive(GArray *params, void *user_ctx)
 
 static void handle_continue(GArray *params, void *user_ctx)
 {
+    // Note: We are not setting cpu pc here
     if (params->len) {
-        printf("[gdb] handle continue setting cpu_pc\n");
         gdb_set_cpu_pc(gdb_get_cmd_param(params, 0)->val_ull);
-    } else {
-        printf("[gdb] handle continue without setting cpu_pc\n");
     }
 
     gdbserver_state.signal = 0;
@@ -2298,7 +2296,7 @@ void gdb_set_stop_cpu(CPUState *cpu)
         return;
     }
 
-    printf("[gdb] setting c_cpu and g_cpu to stop cpu: %d\n", cpu->cpu_index);
+    // printf("[gdb] setting c_cpu and g_cpu to stop cpu: %d\n", cpu->cpu_index);
     gdbserver_state.c_cpu = cpu;
     gdbserver_state.g_cpu = cpu;
 }
