@@ -3544,12 +3544,13 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
         }
     }
 
-    CPU_FOREACH(cpu) {
-        err = kvm_update_guest_debug(cpu, 0);
-        if (err) {
-            return err;
-        }
-    }
+    // TODO: Include me
+    // CPU_FOREACH(cpu) {
+    //     err = kvm_update_guest_debug(cpu, 0);
+    //     if (err) {
+    //         return err;
+    //     }
+    // }
     return 0;
 }
 
