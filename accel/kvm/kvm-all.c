@@ -3598,6 +3598,8 @@ void kvm_remove_all_breakpoints(CPUState *cpu)
     KVMState *s = cpu->kvm_state;
     CPUState *tmpcpu;
 
+    printf("[kvm] removing all breakpoints on cpu: %d\n", cpu->cpu_index);
+
     QTAILQ_FOREACH_SAFE(bp, &s->kvm_sw_breakpoints, entry, next) {
         if (kvm_arch_remove_sw_breakpoint(cpu, bp) != 0) {
             /* Try harder to find a CPU that currently sees the breakpoint. */
