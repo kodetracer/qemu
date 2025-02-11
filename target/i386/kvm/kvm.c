@@ -5826,8 +5826,8 @@ static int kvm_handle_debug(X86CPU *cpu,
 
 void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
-    X86CPU *cpu = X86_CPU(cs);
-    CPUX86State *env = &cpu->env;
+    // X86CPU *cpu = X86_CPU(cs);
+    // CPUX86State *env = &cpu->env;
 
     if (kvm_sw_breakpoints_active(cs)) {
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
