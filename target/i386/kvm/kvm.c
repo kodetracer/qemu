@@ -5837,11 +5837,11 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
     }
 
-    dbg->arch.debugreg[0] = env->dr[0];
-    dbg->arch.debugreg[1] = env->dr[1];
-    dbg->arch.debugreg[2] = env->dr[2];
-    dbg->arch.debugreg[3] = env->dr[3];
-    dbg->arch.debugreg[7] = env->dr[7];
+    // dbg->arch.debugreg[0] = env->dr[0];
+    // dbg->arch.debugreg[1] = env->dr[1];
+    // dbg->arch.debugreg[2] = env->dr[2];
+    // dbg->arch.debugreg[3] = env->dr[3];
+    // dbg->arch.debugreg[7] = env->dr[7];
 }
 
 static int kvm_install_msr_filters(KVMState *s)
