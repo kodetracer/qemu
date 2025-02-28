@@ -5827,7 +5827,7 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
         0,
         env->dr[0],
         env->cr[3],
-        cpu->cpu_index
+        cs->cpu_index
     );
 
     dbg->arch.debugreg[0] = env->dr[0];

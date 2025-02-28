@@ -3538,7 +3538,6 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     }
 
     CPU_FOREACH(cpu) {
-        printf("[kvm] updating guest debug for cpu: %d\n", cpu->cpu_index);
         err = kvm_update_guest_debug(cpu, 0);
         if (err) {
             return err;
