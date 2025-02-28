@@ -5339,11 +5339,11 @@ int kvm_arch_put_registers(CPUState *cpu, int level, Error **errp)
         error_setg_errno(errp, -ret, "Failed to set TSC deadline MSR");
         return ret;
     }
-    ret = kvm_put_debugregs(x86_cpu);
-    if (ret < 0) {
-        error_setg_errno(errp, -ret, "Failed to set debug registers");
-        return ret;
-    }
+    // ret = kvm_put_debugregs(x86_cpu);
+    // if (ret < 0) {
+    //     error_setg_errno(errp, -ret, "Failed to set debug registers");
+    //     return ret;
+    // }
     return 0;
 }
 
@@ -5830,12 +5830,13 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
         cs->cpu_index
     );
 
-    dbg->arch.debugreg[0] = env->dr[0];
-    dbg->arch.debugreg[1] = env->dr[1];
-    dbg->arch.debugreg[2] = env->dr[2];
-    dbg->arch.debugreg[3] = env->dr[3];
-    dbg->arch.debugreg[4] = env->cr[3];
-    dbg->arch.debugreg[7] = env->dr[7];
+    // We also call this on detach...
+    // dbg->arch.debugreg[0] = env->dr[0];
+    // dbg->arch.debugreg[1] = env->dr[1];
+    // dbg->arch.debugreg[2] = env->dr[2];
+    // dbg->arch.debugreg[3] = env->dr[3];
+    // dbg->arch.debugreg[4] = env->cr[3];
+    // dbg->arch.debugreg[7] = env->dr[7];
 }
 
 static bool kvm_install_msr_filters(KVMState *s)
