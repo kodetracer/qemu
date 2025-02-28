@@ -5823,10 +5823,18 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
         dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
     }
 
+    printf("[kvm] updating guest debug to dr[%d] with value: %llx, and cr3: %llx on cpu: %d\n",
+        0,
+        env->dr[0],
+        env->cr3,
+        cpu->cpu_index
+    );
+
     dbg->arch.debugreg[0] = env->dr[0];
     dbg->arch.debugreg[1] = env->dr[1];
     dbg->arch.debugreg[2] = env->dr[2];
     dbg->arch.debugreg[3] = env->dr[3];
+    dbg->arch.debugreg[4] = env->cr3;
     dbg->arch.debugreg[7] = env->dr[7];
 }
 
