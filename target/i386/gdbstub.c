@@ -407,6 +407,10 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             return len;
 
         case IDX_CTL_CR3_REG:
+            printf("[kvm] WRITING cr3 to value: %lx on cpu: %d\n",
+                env->cr[3],
+                cs->cpu_index
+            );
             len = gdb_write_reg_cs64(env->hflags, mem_buf, &tmp);
 #ifndef CONFIG_USER_ONLY
             cpu_x86_update_cr3(env, tmp);
@@ -435,6 +439,11 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             return len;
 
         case IDX_DR_REGS:
+            printf("[kvm] WRITING dr[%d] to value: %lx on cpu: %d\n",
+                0,
+                env->dr[0],
+                cs->cpu_index
+            );
             return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[0]);
         case IDX_DR_REGS + 1:
             return gdb_write_reg_cs64(env->hflags, mem_buf, &env->dr[1]);
