@@ -3495,6 +3495,11 @@ int kvm_update_guest_debug(CPUState *cpu, unsigned long reinject_trap)
             data.dbg.control |= KVM_GUESTDBG_BLOCKIRQ;
         }
     }
+
+    printf("[kvm] INVOKING guest debug on cpu: %d\n",
+        cpu->cpu_index
+    );
+
     kvm_arch_update_guest_debug(cpu, &data.dbg);
 
     run_on_cpu(cpu, kvm_invoke_set_guest_debug,
