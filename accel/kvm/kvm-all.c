@@ -3551,7 +3551,7 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
 
 int kvm_remove_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
 {
-    struct kvm_sw_breakpoint *bp;
+    // struct kvm_sw_breakpoint *bp;
     int err;
     // We use the addr parameter as KVM_GUESTDBG_* flags
     unsigned long flags = addr;
