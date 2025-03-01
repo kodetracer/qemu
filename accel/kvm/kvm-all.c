@@ -3538,7 +3538,7 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     //     }
     // }
 
-    printf("[kvm] Inserting breakpoint by setting guest debug flags to: %lx\n", flags);
+    printf("[kvm] Inserting breakpoint by setting guest debug flags to: %x\n", flags);
 
     CPU_FOREACH(cpu) {
         err = kvm_update_guest_debug(cpu, flags);
