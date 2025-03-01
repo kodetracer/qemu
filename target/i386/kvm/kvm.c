@@ -5817,7 +5817,7 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
     X86CPU *cpu = X86_CPU(cs);
     CPUX86State *env = &cpu->env;
 
-    printf("[kvm] UPDATING guest debug to flag: %lx on cpu: %d\n",
+    printf("[kvm] UPDATING guest debug to flag: %x on cpu: %d\n",
         dbg->control,
         cs->cpu_index
     );
