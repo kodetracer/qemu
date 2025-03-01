@@ -3509,7 +3509,7 @@ bool kvm_supports_guest_debug(void)
 
 int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
 {
-    struct kvm_sw_breakpoint *bp;
+    // struct kvm_sw_breakpoint *bp;
     int err;
     // We use the addr parameter as KVM_GUESTDBG_* flags
     unsigned long flags = addr;
@@ -3538,7 +3538,7 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     //     }
     // }
 
-    printf("[kvm] Inserting breakpoint by setting guest debug flags to: %x\n", flags);
+    printf("[kvm] Inserting breakpoint by setting guest debug flags to: %lx\n", flags);
 
     CPU_FOREACH(cpu) {
         err = kvm_update_guest_debug(cpu, flags);
