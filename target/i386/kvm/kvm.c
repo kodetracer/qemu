@@ -5800,6 +5800,7 @@ static int kvm_handle_debug(X86CPU *cpu,
             }
         }
     // } else if (kvm_find_sw_breakpoint(cs, arch_info->pc)) {
+    // TODO: Maybe check arch_info if it's e.g. hlt
     } else if (arch_info->exception == EXCP03_INT3) {
         printf("[kvm] HANDLING int 3 exception at address: 0x%lx on cpu: %d\n",
             env->eip,

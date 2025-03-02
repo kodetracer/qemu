@@ -3255,6 +3255,10 @@ int kvm_cpu_exec(CPUState *cpu)
                 ret = 0;
                 break;
             default:
+                printf("[kvm] KVM_EXIT_SYSTEM_EVENT with type: %d on cpu: %d\n",
+                    run->system_event.type,
+                    cs->cpu_index
+                );
                 ret = kvm_arch_handle_exit(cpu, run);
                 break;
             }
@@ -3273,6 +3277,10 @@ int kvm_cpu_exec(CPUState *cpu)
                                      run->memory_fault.flags & KVM_MEMORY_EXIT_FLAG_PRIVATE);
             break;
         default:
+            printf("[kvm] Exit reason: %d on cpu: %d\n",
+                run->exit_reason,
+                cs->cpu_index
+            );
             ret = kvm_arch_handle_exit(cpu, run);
             break;
         }
