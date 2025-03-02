@@ -5763,11 +5763,11 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%lx on cpu: %d\n",
-        arch_info->exception,
-        env->eip,
-        cs->cpu_index
-    );
+    // printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%lx on cpu: %d\n",
+    //     arch_info->exception,
+    //     env->eip,
+    //     cs->cpu_index
+    // );
 
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
@@ -5801,6 +5801,10 @@ static int kvm_handle_debug(X86CPU *cpu,
         }
     // } else if (kvm_find_sw_breakpoint(cs, arch_info->pc)) {
     } else if (arch_info->exception == EXCP03_INT3) {
+        printf("[kvm] HANDLING int 3 exception at address: 0x%lx on cpu: %d\n",
+            env->eip,
+            cs->cpu_index
+        );
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
