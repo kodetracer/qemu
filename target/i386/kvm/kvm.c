@@ -5798,7 +5798,8 @@ static int kvm_handle_debug(X86CPU *cpu,
                 }
             }
         }
-    } else if (kvm_find_sw_breakpoint(cs, arch_info->pc)) {
+    // } else if (kvm_find_sw_breakpoint(cs, arch_info->pc)) {
+    } else if (arch_info->exception == EXCP03_INT3) {
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
