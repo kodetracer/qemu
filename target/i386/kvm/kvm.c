@@ -5763,6 +5763,10 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
+    printf("[kvm] HANDLING debug on cpu: %d\n",
+        cs->cpu_index
+    );
+
     if (arch_info->exception == EXCP01_DB) {
         if (arch_info->dr6 & DR6_BS) {
             if (cs->singlestep_enabled) {
