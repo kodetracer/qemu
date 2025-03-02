@@ -5763,8 +5763,9 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    printf("[kvm] HANDLING debug exception: 0x%x on cpu: %d\n",
+    printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%llx on cpu: %d\n",
         arch_info->exception,
+        env->eip,
         cs->cpu_index
     );
 
@@ -5817,6 +5818,8 @@ static int kvm_handle_debug(X86CPU *cpu,
 }
 
 #define KVM_GUESTDBG_SET_HW_BP 0x01000000
+// #define KVM_GUESTDBG_ADD_SW_BP 0x01000000
+// #define KVM_GUESTDBG_REMOVE_SW_BP 0x01000000
 #define KVM_GUESTDBG_REMOVE_ALL_BP 0x02000000
 
 // This is called for each cpu
