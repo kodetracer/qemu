@@ -3482,7 +3482,7 @@ static void kvm_invoke_set_guest_debug(CPUState *cpu, run_on_cpu_data data)
 
 int kvm_update_guest_debug(CPUState *cpu, unsigned long flags)
 {
-    struct kvm_set_guest_debug_data data;
+    struct kvm_set_guest_debug_data data = { 0 };
 
     data.dbg.control = flags;
 

@@ -5816,45 +5816,37 @@ static int kvm_handle_debug(X86CPU *cpu,
     return ret;
 }
 
+#define KVM_GUESTDBG_SET_HW_BP 0x01000000
+#define KVM_GUESTDBG_REMOVE_ALL_BP 0x02000000
+
 // This is called for each cpu
 // TODO: We also call this on detach...
 void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
-    // X86CPU *cpu = X86_CPU(cs);
-    // CPUX86State *env = &cpu->env;
+    X86CPU *cpu = X86_CPU(cs);
+    CPUX86State *env = &cpu->env;
 
     printf("[kvm] UPDATING guest debug to flag: %x on cpu: %d\n",
         dbg->control,
         cs->cpu_index
     );
 
-    // TODO: Move this into hyperflip
     // if (kvm_sw_breakpoints_active(cs)) {
     //     dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
     // }
 
-    // TODO: Move this into hyperflip
     // if (nb_hw_breakpoint > 0) {
     //     dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_HW_BP;
     // }
 
-
-    // TODO: Check for either add or remove hardware breakpoint
-    //       Assume the env->dr[0] etc has been set up
-
-    // printf("[kvm] UPDATING guest debug to dr[%d] with value: %lx, and cr3: %lx on cpu: %d\n",
-    //     0,
-    //     env->dr[0],
-    //     env->cr[3],
-    //     cs->cpu_index
-    // );
-
-    // dbg->arch.debugreg[0] = env->dr[0];
-    // dbg->arch.debugreg[1] = env->dr[1];
-    // dbg->arch.debugreg[2] = env->dr[2];
-    // dbg->arch.debugreg[3] = env->dr[3];
-    // dbg->arch.debugreg[4] = env->cr[3];
-    // dbg->arch.debugreg[7] = env->dr[7];
+    if (dbg->control & KVM_GUESTDBG_SET_HW_BP) {
+        dbg->arch.debugreg[0] = env->dr[0];
+        dbg->arch.debugreg[1] = env->dr[1];
+        dbg->arch.debugreg[2] = env->dr[2];
+        dbg->arch.debugreg[3] = env->dr[3];
+        dbg->arch.debugreg[4] = env->cr[3];
+        dbg->arch.debugreg[7] = env->dr[7];
+    }
 }
 
 static bool kvm_install_msr_filters(KVMState *s)
