@@ -5763,7 +5763,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%llx on cpu: %d\n",
+    printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%lx on cpu: %d\n",
         arch_info->exception,
         env->eip,
         cs->cpu_index
