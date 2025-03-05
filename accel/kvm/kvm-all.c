@@ -2916,7 +2916,7 @@ static void do_kvm_cpu_synchronize_post_init(CPUState *cpu, run_on_cpu_data arg)
     int ret = kvm_arch_put_registers(cpu, KVM_PUT_FULL_STATE, &err);
     if (ret) {
         if (err) {
-            error_reportf_err(err, "Putting registers after init: ");
+            error_reportf_err(err, "(cpu_sync) Putting registers after init: ");
         } else {
             error_report("Failed to put registers after init: %s",
                          strerror(-ret));
@@ -3114,7 +3114,7 @@ int kvm_cpu_exec(CPUState *cpu)
             ret = kvm_arch_put_registers(cpu, KVM_PUT_RUNTIME_STATE, &err);
             if (ret) {
                 if (err) {
-                    error_reportf_err(err, "Putting registers after init: ");
+                    error_reportf_err(err, "(cpu exec) Putting registers after init: ");
                 } else {
                     error_report("Failed to put registers after init: %s",
                                  strerror(-ret));

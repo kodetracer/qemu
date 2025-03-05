@@ -5267,6 +5267,10 @@ int kvm_arch_put_registers(CPUState *cpu, int level, Error **errp)
         }
     }
 
+    printf("[kvm] PUTTING special registers with has_sregs2: %d\n",
+        has_sregs2
+    );
+
     /* must be before kvm_put_nested_state so that EFER.SVME is set */
     ret = has_sregs2 ? kvm_put_sregs2(x86_cpu) : kvm_put_sregs(x86_cpu);
     if (ret < 0) {
