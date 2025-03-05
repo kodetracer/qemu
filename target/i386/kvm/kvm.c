@@ -3565,7 +3565,7 @@ static int kvm_put_sregs2(X86CPU *cpu)
 
     printf("[kvm] SETTING cr0: %lx, cr4: %lx\n",
         env->cr[0],
-        env->cr[4],
+        env->cr[4]
     );
 
     sregs.cr0 = env->cr[0];
