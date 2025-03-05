@@ -3563,10 +3563,9 @@ static int kvm_put_sregs2(X86CPU *cpu)
     sregs.gdt.base = env->gdt.base;
     memset(sregs.gdt.padding, 0, sizeof sregs.gdt.padding);
 
-    printf("[kvm] SETTING cr0: %lx, cr4: %lx on cpu: %d\n",
+    printf("[kvm] SETTING cr0: %lx, cr4: %lx\n",
         env->cr[0],
         env->cr[4],
-        env->cpu_index
     );
 
     sregs.cr0 = env->cr[0];
