@@ -3563,6 +3563,12 @@ static int kvm_put_sregs2(X86CPU *cpu)
     sregs.gdt.base = env->gdt.base;
     memset(sregs.gdt.padding, 0, sizeof sregs.gdt.padding);
 
+    printf("[kvm] SETTING cr0: %lx, cr4: %lx on cpu: %d\n",
+        env->cr[0],
+        env->cr[4],
+        env->cpu_index
+    );
+
     sregs.cr0 = env->cr[0];
     sregs.cr2 = env->cr[2];
     sregs.cr3 = env->cr[3];
@@ -5266,10 +5272,6 @@ int kvm_arch_put_registers(CPUState *cpu, int level, Error **errp)
             return ret;
         }
     }
-
-    printf("[kvm] PUTTING special registers with has_sregs2: %d\n",
-        has_sregs2
-    );
 
     /* must be before kvm_put_nested_state so that EFER.SVME is set */
     ret = has_sregs2 ? kvm_put_sregs2(x86_cpu) : kvm_put_sregs(x86_cpu);
