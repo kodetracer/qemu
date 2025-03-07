@@ -165,9 +165,10 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
         switch (n) {
         case IDX_IP_REG:
             count = gdb_get_reg(env, mem_buf, env->eip);
-            printf("[kvm] READING eip: %lx with size: %d\n",
+            printf("[kvm] READING eip: %lx with size: %d on cpu: %d\n",
                 env->eip,
-                count
+                count,
+                cs->cpu_index
             );
             return count;
             // return gdb_get_reg(env, mem_buf, env->eip);
@@ -361,7 +362,14 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
     } else {
         switch (n) {
         case IDX_IP_REG:
-            return gdb_write_reg(env, mem_buf, &env->eip);
+            len = gdb_write_reg(env, mem_buf, &env->eip);
+            printf("[kvm] WRITING eip: %lx with size: %d on cpu: %d\n",
+                env->eip,
+                count,
+                cs->cpu_index
+            );
+            return len;
+            // return gdb_write_reg(env, mem_buf, &env->eip);
         case IDX_FLAGS_REG:
             env->eflags = ldl_p(mem_buf);
             return 4;
