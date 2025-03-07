@@ -100,7 +100,8 @@ static int gdb_read_reg_cs64(uint32_t hflags, GByteArray *buf, target_ulong val)
 
 static int gdb_write_reg_cs64(uint32_t hflags, uint8_t *buf, target_ulong *val)
 {
-    if (hflags & HF_CS64_MASK) {
+    if ((hflags & HF_CS64_MASK) || GDB_FORCE_64) {
+    // if (hflags & HF_CS64_MASK) {
         *val = ldq_p(buf);
         return 8;
     }
@@ -163,7 +164,13 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
     } else {
         switch (n) {
         case IDX_IP_REG:
-            return gdb_get_reg(env, mem_buf, env->eip);
+            count = gdb_get_reg(env, mem_buf, env->eip);
+            printf("[kvm] READING eip: %lx with size: %d\n",
+                env->eip,
+                count
+            );
+            return count;
+            // return gdb_get_reg(env, mem_buf, env->eip);
         case IDX_FLAGS_REG:
             return gdb_get_reg32(mem_buf, env->eflags);
 
