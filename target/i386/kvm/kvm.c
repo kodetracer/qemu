@@ -5775,6 +5775,10 @@ static int kvm_handle_debug(X86CPU *cpu,
     // );
 
     if (arch_info->exception == EXCP01_DB) {
+        printf("[kvm] HANDLING DB exception at address: 0x%lx on cpu: %d\n",
+            env->eip,
+            cs->cpu_index
+        );
         if (arch_info->dr6 & DR6_BS) {
             if (cs->singlestep_enabled) {
                 ret = EXCP_DEBUG;
@@ -5814,6 +5818,10 @@ static int kvm_handle_debug(X86CPU *cpu,
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
+        printf("[kvm] SYNCHRONIZING state at address: 0x%lx on cpu: %d\n",
+            env->eip,
+            cs->cpu_index
+        );
         cpu_synchronize_state(cs);
         assert(env->exception_nr == -1);
 
@@ -5839,10 +5847,10 @@ void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
     X86CPU *cpu = X86_CPU(cs);
     CPUX86State *env = &cpu->env;
 
-    printf("[kvm] UPDATING guest debug to flag: %x on cpu: %d\n",
-        dbg->control,
-        cs->cpu_index
-    );
+    // printf("[kvm] UPDATING guest debug to flag: %x on cpu: %d\n",
+    //     dbg->control,
+    //     cs->cpu_index
+    // );
 
     // if (kvm_sw_breakpoints_active(cs)) {
     //     dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
