@@ -3110,18 +3110,18 @@ int kvm_cpu_exec(CPUState *cpu)
         MemTxAttrs attrs;
 
         if (cpu->vcpu_dirty) {
-            Error *err = NULL;
-            ret = kvm_arch_put_registers(cpu, KVM_PUT_RUNTIME_STATE, &err);
-            if (ret) {
-                if (err) {
-                    error_reportf_err(err, "(cpu exec) Putting registers after init: ");
-                } else {
-                    error_report("Failed to put registers after init: %s",
-                                 strerror(-ret));
-                }
-                ret = -1;
-                break;
-            }
+            // Error *err = NULL;
+            // ret = kvm_arch_put_registers(cpu, KVM_PUT_RUNTIME_STATE, &err);
+            // if (ret) {
+            //     if (err) {
+            //         error_reportf_err(err, "(cpu exec) Putting registers after init: ");
+            //     } else {
+            //         error_report("Failed to put registers after init: %s",
+            //                      strerror(-ret));
+            //     }
+            //     ret = -1;
+            //     break;
+            // }
 
             cpu->vcpu_dirty = false;
         }
