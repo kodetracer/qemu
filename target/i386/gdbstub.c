@@ -365,7 +365,7 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
             len = gdb_write_reg(env, mem_buf, &env->eip);
             printf("[kvm] WRITING eip: %lx with size: %d on cpu: %d\n",
                 env->eip,
-                count,
+                len,
                 cs->cpu_index
             );
             return len;
