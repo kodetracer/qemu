@@ -5788,6 +5788,10 @@ static int kvm_handle_debug(X86CPU *cpu,
                 if (arch_info->dr6 & (1 << n)) {
                     switch ((arch_info->dr7 >> (16 + n*4)) & 0x3) {
                     case 0x0:
+                        printf("[kvm] EXCP_DEBUG at address: 0x%lx on cpu: %d\n",
+                            env->eip,
+                            cs->cpu_index
+                        );
                         ret = EXCP_DEBUG;
                         break;
                     case 0x1:
