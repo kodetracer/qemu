@@ -332,9 +332,7 @@ bool cpu_can_run(CPUState *cpu)
 
 void cpu_handle_guest_debug(CPUState *cpu)
 {
-    // TODO: Debug
     if (replay_running_debug()) {
-        printf("[handle_debug] Replaying on cpu: %d\n", cpu->cpu_index);
         if (!cpu->singlestep_enabled) {
             /*
              * Report about the breakpoint and
@@ -346,7 +344,6 @@ void cpu_handle_guest_debug(CPUState *cpu)
             cpu_single_step(cpu, 0);
         }
     } else {
-        printf("[handle_debug] NOT replaying on cpu: %d\n", cpu->cpu_index);
         gdb_set_stop_cpu(cpu);
         qemu_system_debug_request();
         cpu->stopped = true;
