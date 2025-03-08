@@ -222,25 +222,25 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
             return gdb_get_reg32(mem_buf, env->mxcsr);
 
         case IDX_CTL_CR0_REG:
-            count = gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[0]);
-            printf("[kvm] READING cr0: %lx with size: %d\n",
-                env->cr[0],
-                count
-            );
-            return count;
-            // return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[0]);
+            // count = gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[0]);
+            // printf("[kvm] READING cr0: %lx with size: %d\n",
+            //     env->cr[0],
+            //     count
+            // );
+            // return count;
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[0]);
         case IDX_CTL_CR2_REG:
             return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[2]);
         case IDX_CTL_CR3_REG:
             return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[3]);
         case IDX_CTL_CR4_REG:
-            count = gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[4]);
-            printf("[kvm] READING cr4: %lx with size: %d\n",
-                env->cr[4],
-                count
-            );
-            return count;
-            // return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[4]);
+            // count = gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[4]);
+            // printf("[kvm] READING cr4: %lx with size: %d\n",
+            //     env->cr[4],
+            //     count
+            // );
+            // return count;
+            return gdb_read_reg_cs64(env->hflags, mem_buf, env->cr[4]);
         case IDX_CTL_CR8_REG:
 #ifndef CONFIG_USER_ONLY
             tpr = cpu_get_apic_tpr(cpu->apic_state);
@@ -426,10 +426,10 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 #ifndef CONFIG_USER_ONLY
             cpu_x86_update_cr0(env, tmp);
 #endif
-            printf("[kvm] WRITING cr0: %lx with size: %d\n",
-                env->cr[0],
-                len
-            );
+            // printf("[kvm] WRITING cr0: %lx with size: %d\n",
+            //     env->cr[0],
+            //     len
+            // );
             return len;
 
         case IDX_CTL_CR2_REG:
@@ -451,10 +451,10 @@ int x86_cpu_gdb_write_register(CPUState *cs, uint8_t *mem_buf, int n)
 #ifndef CONFIG_USER_ONLY
             cpu_x86_update_cr4(env, tmp);
 #endif
-            printf("[kvm] WRITING cr4: %lx with size: %d\n",
-                env->cr[4],
-                len
-            );
+            // printf("[kvm] WRITING cr4: %lx with size: %d\n",
+            //     env->cr[4],
+            //     len
+            // );
             return len;
 
         case IDX_CTL_CR8_REG:
