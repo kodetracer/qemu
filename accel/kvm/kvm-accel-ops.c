@@ -49,9 +49,6 @@ static void *kvm_vcpu_thread_fn(void *arg)
         if (cpu_can_run(cpu)) {
             r = kvm_cpu_exec(cpu);
             if (r == EXCP_DEBUG) {
-                printf("[kvm] HANDLING guest debug on cpu: %d\n",
-                    cpu->cpu_index
-                );
                 cpu_handle_guest_debug(cpu);
             }
         }
