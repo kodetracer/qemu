@@ -2285,16 +2285,16 @@ static int gdb_handle_packet(const char *line_buf)
 
 void gdb_set_stop_cpu(CPUState *cpu)
 {
-    GDBProcess *p = gdb_get_cpu_process(cpu);
+    // GDBProcess *p = gdb_get_cpu_process(cpu);
 
-    if (!p->attached) {
-        printf("[gdb_set_stop_cpu] Confused on cpu: %d\n", cpu->cpu_index);
-        /*
-         * Having a stop CPU corresponding to a process that is not attached
-         * confuses GDB. So we ignore the request.
-         */
-        return;
-    }
+    // if (!p->attached) {
+    //     printf("[gdb_set_stop_cpu] Confused on cpu: %d\n", cpu->cpu_index);
+    //     /*
+    //      * Having a stop CPU corresponding to a process that is not attached
+    //      * confuses GDB. So we ignore the request.
+    //      */
+    //     return;
+    // }
     printf("[gdb_set_stop_cpu] Setting stop cpu to: %d\n", cpu->cpu_index);
 
     gdbserver_state.c_cpu = cpu;
