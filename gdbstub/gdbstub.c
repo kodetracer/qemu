@@ -1348,7 +1348,7 @@ static void handle_step(GArray *params, void *user_ctx)
         printf("[kvm] Handling step without setting CPU\n");
     }
 
-    printf("[kvm] STEPPING on cpu: %d with flags: %lx\n",
+    printf("[kvm] STEPPING on cpu: %d with flags: %x\n",
         gdbserver_state.c_cpu->cpu_index, gdbserver_state.sstep_flags
     );
     cpu_single_step(gdbserver_state.c_cpu, gdbserver_state.sstep_flags);
