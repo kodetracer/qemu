@@ -1342,9 +1342,15 @@ static void handle_read_all_regs(GArray *params, void *user_ctx)
 static void handle_step(GArray *params, void *user_ctx)
 {
     if (params->len) {
+        printf("[kvm] Setting CPU in handle_step\n");
         gdb_set_cpu_pc(gdb_get_cmd_param(params, 0)->val_ull);
+    } else {
+        printf("[kvm] Handling step without setting CPU\n");
     }
 
+    printf("[kvm] STEPPING on cpu: %d with flags: %lx\n",
+        gdbserver_state.c_cpu->cpu_index, gdbserver_state.sstep_flags
+    );
     cpu_single_step(gdbserver_state.c_cpu, gdbserver_state.sstep_flags);
     gdb_continue();
 }
