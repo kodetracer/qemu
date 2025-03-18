@@ -128,7 +128,6 @@ int x86_cpu_gdb_read_register(CPUState *cs, GByteArray *mem_buf, int n)
     CPUX86State *env = &cpu->env;
 
     uint64_t tpr;
-    int count = 0;
 
     /* N.B. GDB can't deal with changes in registers or sizes in the middle
        of a session. So if we're in 32-bit mode on a 64-bit cpu, still act
