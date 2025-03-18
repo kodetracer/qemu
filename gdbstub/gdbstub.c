@@ -72,7 +72,8 @@ void gdb_init_gdbserver_state(void)
      * stepping so as to make single stepping like a typical ICE HW step.
      */
     gdbserver_state.supported_sstep_flags = accel_supported_gdbstub_sstep_flags();
-    gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOIRQ | SSTEP_NOTIMER;
+    // gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOIRQ | SSTEP_NOTIMER;
+    gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOTIMER;
     gdbserver_state.sstep_flags &= gdbserver_state.supported_sstep_flags;
 }
 
