@@ -3498,7 +3498,14 @@ int kvm_update_guest_debug(CPUState *cpu, unsigned long flags)
         data.dbg.control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_SINGLESTEP;
 
         if (cpu->singlestep_enabled & SSTEP_NOIRQ) {
+            printf("[kvm] UPDATING guest debug to single step with NOIRQ on cpu: %d\n",
+                cpu->cpu_index
+            );
             data.dbg.control |= KVM_GUESTDBG_BLOCKIRQ;
+        } else {
+            printf("[kvm] UPDATING guest debug to single step WITH IRQ on cpu: %d\n",
+                cpu->cpu_index
+            );
         }
     }
 
