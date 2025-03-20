@@ -3563,11 +3563,6 @@ static int kvm_put_sregs2(X86CPU *cpu)
     sregs.gdt.base = env->gdt.base;
     memset(sregs.gdt.padding, 0, sizeof sregs.gdt.padding);
 
-    printf("[kvm] SETTING cr0: %lx, cr4: %lx\n",
-        env->cr[0],
-        env->cr[4]
-    );
-
     sregs.cr0 = env->cr[0];
     sregs.cr2 = env->cr[2];
     sregs.cr3 = env->cr[3];
@@ -5768,17 +5763,7 @@ static int kvm_handle_debug(X86CPU *cpu,
     int ret = 0;
     int n;
 
-    // printf("[kvm] HANDLING debug exception: 0x%x at address: 0x%lx on cpu: %d\n",
-    //     arch_info->exception,
-    //     env->eip,
-    //     cs->cpu_index
-    // );
-
     if (arch_info->exception == EXCP01_DB) {
-        // printf("[kvm] HANDLING DB exception at address: 0x%lx on cpu: %d\n",
-        //     env->eip,
-        //     cs->cpu_index
-        // );
         if (arch_info->dr6 & DR6_BS) {
             if (cs->singlestep_enabled) {
                 ret = EXCP_DEBUG;
@@ -5788,10 +5773,6 @@ static int kvm_handle_debug(X86CPU *cpu,
                 if (arch_info->dr6 & (1 << n)) {
                     switch ((arch_info->dr7 >> (16 + n*4)) & 0x3) {
                     case 0x0:
-                        // printf("[kvm] EXCP_DEBUG at address: 0x%lx on cpu: %d\n",
-                        //     env->eip,
-                        //     cs->cpu_index
-                        // );
                         ret = EXCP_DEBUG;
                         break;
                     case 0x1:
