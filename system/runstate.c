@@ -765,7 +765,6 @@ void qemu_register_shutdown_notifier(Notifier *notifier)
 void qemu_system_debug_request(void)
 {
     debug_requested = 1;
-    printf("[qemu_system_debug_request] Sending notify event\n");
     qemu_notify_event();
 }
 
