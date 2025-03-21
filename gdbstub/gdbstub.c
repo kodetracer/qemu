@@ -1344,7 +1344,7 @@ static void handle_step(GArray *params, void *user_ctx)
 {
     if (params->len) {
         gdb_set_cpu_pc(gdb_get_cmd_param(params, 0)->val_ull);
-	}
+    }
 
     cpu_single_step(gdbserver_state.c_cpu, gdbserver_state.sstep_flags);
     gdb_continue();
