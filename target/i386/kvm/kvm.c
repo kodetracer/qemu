@@ -5821,21 +5821,12 @@ static int kvm_handle_debug(X86CPU *cpu,
 }
 
 #define KVM_GUESTDBG_SET_HW_BP 0x01000000
-// #define KVM_GUESTDBG_ADD_SW_BP 0x01000000
-// #define KVM_GUESTDBG_REMOVE_SW_BP 0x01000000
 #define KVM_GUESTDBG_REMOVE_ALL_BP 0x02000000
 
-// This is called for each cpu
-// TODO: We also call this on detach...
 void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
     X86CPU *cpu = X86_CPU(cs);
     CPUX86State *env = &cpu->env;
-
-    // printf("[kvm] UPDATING guest debug to flag: %x on cpu: %d\n",
-    //     dbg->control,
-    //     cs->cpu_index
-    // );
 
     // if (kvm_sw_breakpoints_active(cs)) {
     //     dbg->control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_USE_SW_BP;
