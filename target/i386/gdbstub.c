@@ -92,7 +92,6 @@ static const int gpr_map32[8] = { 0, 1, 2, 3, 4, 5, 6, 7 };
 static int gdb_read_reg_cs64(uint32_t hflags, GByteArray *buf, target_ulong val)
 {
     if ((hflags & HF_CS64_MASK) || GDB_FORCE_64) {
-    // if (hflags & HF_CS64_MASK) {
         return gdb_get_reg64(buf, val);
     }
     return gdb_get_reg32(buf, val);
@@ -101,7 +100,6 @@ static int gdb_read_reg_cs64(uint32_t hflags, GByteArray *buf, target_ulong val)
 static int gdb_write_reg_cs64(uint32_t hflags, uint8_t *buf, target_ulong *val)
 {
     if ((hflags & HF_CS64_MASK) || GDB_FORCE_64) {
-    // if (hflags & HF_CS64_MASK) {
         *val = ldq_p(buf);
         return 8;
     }
