@@ -3254,10 +3254,6 @@ int kvm_cpu_exec(CPUState *cpu)
                 ret = 0;
                 break;
             default:
-                // printf("[kvm] KVM_EXIT_SYSTEM_EVENT with type: %d on cpu: %d\n",
-                //     run->system_event.type,
-                //     cpu->cpu_index
-                // );
                 ret = kvm_arch_handle_exit(cpu, run);
                 break;
             }
@@ -3276,10 +3272,6 @@ int kvm_cpu_exec(CPUState *cpu)
                                      run->memory_fault.flags & KVM_MEMORY_EXIT_FLAG_PRIVATE);
             break;
         default:
-            // printf("[kvm] Exit reason: %d on cpu: %d\n",
-            //     run->exit_reason,
-            //     cpu->cpu_index
-            // );
             ret = kvm_arch_handle_exit(cpu, run);
             break;
         }
@@ -3497,14 +3489,7 @@ int kvm_update_guest_debug(CPUState *cpu, unsigned long flags)
         data.dbg.control |= KVM_GUESTDBG_ENABLE | KVM_GUESTDBG_SINGLESTEP;
 
         if (cpu->singlestep_enabled & SSTEP_NOIRQ) {
-            printf("[kvm] UPDATING guest debug to single step with NOIRQ on cpu: %d\n",
-                cpu->cpu_index
-            );
             data.dbg.control |= KVM_GUESTDBG_BLOCKIRQ;
-        } else {
-            printf("[kvm] UPDATING guest debug to single step WITH IRQ on cpu: %d\n",
-                cpu->cpu_index
-            );
         }
     }
 
@@ -3552,8 +3537,6 @@ int kvm_insert_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     //     }
     // }
 
-    printf("[kvm] Inserting breakpoint by setting guest debug flags to: %lx\n", flags);
-
     CPU_FOREACH(cpu) {
         err = kvm_update_guest_debug(cpu, flags);
         if (err) {
@@ -3589,14 +3572,11 @@ int kvm_remove_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     //     QTAILQ_REMOVE(&cpu->kvm_state->kvm_sw_breakpoints, bp, entry);
     //     g_free(bp);
     // } else {
-    //     // TODO: Send a special command in maybe dr[5] to remove breakpoint
     //     err = kvm_arch_remove_hw_breakpoint(addr, len, type);
     //     if (err) {
     //         return err;
     //     }
     // }
-
-    printf("[kvm] Removing breakpoint by setting guest debug flags to: %lx\n", flags);
 
     CPU_FOREACH(cpu) {
         err = kvm_update_guest_debug(cpu, 0);
@@ -3607,32 +3587,28 @@ int kvm_remove_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     return 0;
 }
 
-// Detach uses this
 void kvm_remove_all_breakpoints(CPUState *cpu)
 {
-    struct kvm_sw_breakpoint *bp, *next;
-    KVMState *s = cpu->kvm_state;
-    CPUState *tmpcpu;
+    // struct kvm_sw_breakpoint *bp, *next;
+    // KVMState *s = cpu->kvm_state;
+    // CPUState *tmpcpu;
 
-    // TODO: Remove this
-    QTAILQ_FOREACH_SAFE(bp, &s->kvm_sw_breakpoints, entry, next) {
-        if (kvm_arch_remove_sw_breakpoint(cpu, bp) != 0) {
-            /* Try harder to find a CPU that currently sees the breakpoint. */
-            CPU_FOREACH(tmpcpu) {
-                if (kvm_arch_remove_sw_breakpoint(tmpcpu, bp) == 0) {
-                    break;
-                }
-            }
-        }
-        QTAILQ_REMOVE(&s->kvm_sw_breakpoints, bp, entry);
-        g_free(bp);
-    }
-    // Note: This only sets number of breakpoints to zero
-    kvm_arch_remove_all_hw_breakpoints();
+    // QTAILQ_FOREACH_SAFE(bp, &s->kvm_sw_breakpoints, entry, next) {
+    //     if (kvm_arch_remove_sw_breakpoint(cpu, bp) != 0) {
+    //         /* Try harder to find a CPU that currently sees the breakpoint. */
+    //         CPU_FOREACH(tmpcpu) {
+    //             if (kvm_arch_remove_sw_breakpoint(tmpcpu, bp) == 0) {
+    //                 break;
+    //             }
+    //         }
+    //     }
+    //     QTAILQ_REMOVE(&s->kvm_sw_breakpoints, bp, entry);
+    //     g_free(bp);
+    // }
+    // kvm_arch_remove_all_hw_breakpoints();
 
-    // TODO: Send a special flag to clear all hwbp
     CPU_FOREACH(cpu) {
-        kvm_update_guest_debug(cpu, 0);
+        kvm_update_guest_debug(cpu, KVM_GUESTDBG_REMOVE_ALL_BP);
     }
 }
 
