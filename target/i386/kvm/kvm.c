@@ -6056,10 +6056,7 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
 
     switch (run->exit_reason) {
     case KVM_EXIT_HLT:
-        printf("[kvm] Handling HLT on cpu: %d\n",
-            cs->cpu_index
-        );
-        // DPRINTF("handle_hlt\n");
+        DPRINTF("handle_hlt\n");
         bql_lock();
         ret = kvm_handle_halt(cpu);
         bql_unlock();
@@ -6095,10 +6092,7 @@ int kvm_arch_handle_exit(CPUState *cs, struct kvm_run *run)
         ret = -1;
         break;
     case KVM_EXIT_DEBUG:
-        printf("[kvm] Handling KVM_EXIT_DEBUG on cpu: %d\n",
-            cs->cpu_index
-        );
-        // DPRINTF("kvm_exit_debug\n");
+        DPRINTF("kvm_exit_debug\n");
         bql_lock();
         ret = kvm_handle_debug(cpu, &run->debug.arch);
         bql_unlock();

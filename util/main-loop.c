@@ -146,7 +146,6 @@ AioContext *qemu_get_aio_context(void)
 void qemu_notify_event(void)
 {
     if (!qemu_aio_context) {
-        printf("[qemu_notify_event] NOT qemu_aio_context\n");
         return;
     }
     qemu_bh_schedule(qemu_notify_bh);
