@@ -3579,7 +3579,7 @@ int kvm_remove_breakpoint(CPUState *cpu, int type, vaddr addr, vaddr len)
     // }
 
     CPU_FOREACH(cpu) {
-        err = kvm_update_guest_debug(cpu, 0);
+        err = kvm_update_guest_debug(cpu, flags);
         if (err) {
             return err;
         }

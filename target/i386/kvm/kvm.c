@@ -5822,9 +5822,6 @@ static int kvm_handle_debug(X86CPU *cpu,
     return ret;
 }
 
-#define KVM_GUESTDBG_SET_HW_BP 0x01000000
-#define KVM_GUESTDBG_REMOVE_ALL_BP 0x02000000
-
 void kvm_arch_update_guest_debug(CPUState *cs, struct kvm_guest_debug *dbg)
 {
     // const uint8_t type_code[] = {
