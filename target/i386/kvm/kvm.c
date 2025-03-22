@@ -5779,14 +5779,14 @@ static int kvm_handle_debug(X86CPU *cpu,
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
                         // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
-                        hw_watchpoint.vaddr = env->dr[n];
+                        hw_watchpoint.vaddr = arch_info->pc;
                         hw_watchpoint.flags = BP_MEM_WRITE;
                         break;
                     case 0x3:
                         ret = EXCP_DEBUG;
                         cs->watchpoint_hit = &hw_watchpoint;
                         // hw_watchpoint.vaddr = hw_breakpoint[n].addr;
-                        hw_watchpoint.vaddr = env->dr[n];
+                        hw_watchpoint.vaddr = arch_info->pc;
                         hw_watchpoint.flags = BP_MEM_ACCESS;
                         break;
                     }
@@ -5795,16 +5795,18 @@ static int kvm_handle_debug(X86CPU *cpu,
         }
     // } else if (kvm_find_sw_breakpoint(cs, arch_info->pc)) {
     // TODO: Maybe check arch_info if it's e.g. hlt
+	// TODO: This will trigger ALL breakpoints
+	// TODO: Do we end up queueing exceptions on invalid breakpoints?
     } else if (arch_info->exception == EXCP03_INT3) {
         printf("[kvm] HANDLING int 3 exception at address: 0x%lx on cpu: %d\n",
-            env->eip,
+            arch_info->pc,
             cs->cpu_index
         );
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
-        printf("[kvm] SYNCHRONIZING state at address: 0x%lx on cpu: %d\n",
-            env->eip,
+        printf("[kvm] QUEUEING exception at address: 0x%lx on cpu: %d\n",
+            arch_info->pc,
             cs->cpu_index
         );
         cpu_synchronize_state(cs);
