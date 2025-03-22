@@ -5798,14 +5798,14 @@ static int kvm_handle_debug(X86CPU *cpu,
 	// TODO: This will trigger ALL breakpoints
 	// TODO: Do we end up queueing exceptions on invalid breakpoints?
     } else if (arch_info->exception == EXCP03_INT3) {
-        printf("[kvm] HANDLING int 3 exception at address: 0x%lx on cpu: %d\n",
+        printf("[kvm] HANDLING int 3 exception at address: 0x%llx on cpu: %d\n",
             arch_info->pc,
             cs->cpu_index
         );
         ret = EXCP_DEBUG;
     }
     if (ret == 0) {
-        printf("[kvm] QUEUEING exception at address: 0x%lx on cpu: %d\n",
+        printf("[kvm] QUEUEING exception at address: 0x%llx on cpu: %d\n",
             arch_info->pc,
             cs->cpu_index
         );
