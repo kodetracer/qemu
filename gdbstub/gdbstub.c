@@ -72,7 +72,8 @@ void gdb_init_gdbserver_state(void)
      * stepping so as to make single stepping like a typical ICE HW step.
      */
     gdbserver_state.supported_sstep_flags = accel_supported_gdbstub_sstep_flags();
-    gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOIRQ | SSTEP_NOTIMER;
+    // gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOIRQ | SSTEP_NOTIMER;
+    gdbserver_state.sstep_flags = SSTEP_ENABLE | SSTEP_NOTIMER;
     gdbserver_state.sstep_flags &= gdbserver_state.supported_sstep_flags;
 }
 
@@ -2277,15 +2278,15 @@ static int gdb_handle_packet(const char *line_buf)
 
 void gdb_set_stop_cpu(CPUState *cpu)
 {
-    GDBProcess *p = gdb_get_cpu_process(cpu);
+    // GDBProcess *p = gdb_get_cpu_process(cpu);
 
-    if (!p->attached) {
-        /*
-         * Having a stop CPU corresponding to a process that is not attached
-         * confuses GDB. So we ignore the request.
-         */
-        return;
-    }
+    // if (!p->attached) {
+    //     /*
+    //      * Having a stop CPU corresponding to a process that is not attached
+    //      * confuses GDB. So we ignore the request.
+    //      */
+    //     return;
+    // }
 
     gdbserver_state.c_cpu = cpu;
     gdbserver_state.g_cpu = cpu;
