@@ -220,4 +220,16 @@
   <reg name="xmm15" bitsize="128" type="vec128"/>
 
   <reg name="mxcsr" bitsize="32" type="x64_mxcsr" group="vector"/>
+
+  <!-- Debug registers, hidden flags, and IDT. Kept in the core feature so
+       they stay in the g packet at the indices the read/write handlers use. -->
+  <reg name="dr0" bitsize="64" type="int64"/>
+  <reg name="dr1" bitsize="64" type="int64"/>
+  <reg name="dr2" bitsize="64" type="int64"/>
+  <reg name="dr3" bitsize="64" type="int64"/>
+  <reg name="dr6" bitsize="64" type="int64"/>
+  <reg name="dr7" bitsize="64" type="int64"/>
+  <reg name="hflags" bitsize="32" type="int32"/>
+  <reg name="idt_base" bitsize="64" type="int64"/>
+  <reg name="idt_limit" bitsize="32" type="int32"/>
 </feature>
