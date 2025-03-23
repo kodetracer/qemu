@@ -3122,6 +3122,7 @@ int kvm_cpu_exec(CPUState *cpu)
                 ret = -1;
                 break;
             }
+
             cpu->vcpu_dirty = false;
         }
 
